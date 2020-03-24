@@ -1,0 +1,29 @@
+<ion-content class="ion-padding" >
+  <h1>
+    CUCEI MOVIL
+  </h1>
+  <ion-card>
+    <ion-card-header>
+      LOGIN
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list no-lines>
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input [(ngModel)]="username"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <p class="pequenia">Forgot password<a> Click here</a></p>
+        </ion-item>
+      </ion-list>
+      <!--<ion-button expand="block" color="primary" (click)="login()">Log In</ion-button>-->
+      <ion-button expand="block" color="primary" routerLink="/map" routerDirection ="forward">Log In</ion-button>
+      <ion-button expand="block" fill="clear" routerLink="/register" routerDirection ="forward">Register</ion-button>
+    
+    </ion-card-content>
+  </ion-card>
+</ion-content>
