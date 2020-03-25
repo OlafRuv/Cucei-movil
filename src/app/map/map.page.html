@@ -12,13 +12,15 @@
   <h1>
     PARKING MAP
   </h1>
+  <div #map id="map"></div> 
   <ion-card>
     <ion-card-content>
       
       <ion-button expand="block" color="primary" (click)="funcionMapa()">Add marker</ion-button>
-      <ion-button expand="block" fill="clear" routerLink="/home" routerDirection="backwad">Delete marker</ion-button>
-      <div>
-      </div>
+      <ion-button expand="block" fill="clear" (click)="funcionMapa()">Delete marker</ion-button>
+      
     </ion-card-content>
   </ion-card>
+
+  
 </ion-content>
