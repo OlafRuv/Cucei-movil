@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "cucei-movil": {
+      "hosting": {
+        "app": [
+          "cucei-movil"
+        ]
+      }
+    }
+  }
+}

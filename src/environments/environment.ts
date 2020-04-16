@@ -2,9 +2,23 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+
+// Configuración de la base de datos en Firebase
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig : {
+    apiKey: "AIzaSyD3x3wi442S8fJKJ_Evc4dizyGC2Xnvp9A",
+    authDomain: "cucei-movil.firebaseapp.com",
+    databaseURL: "https://cucei-movil.firebaseio.com",
+    projectId: "cucei-movil",
+    storageBucket: "cucei-movil.appspot.com",
+    messagingSenderId: "1065531220748",
+    appId: "1:1065531220748:web:756a28081b3df5e0c7df29",
+    measurementId: "G-3MX7TQ4F14"
+  }
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file
