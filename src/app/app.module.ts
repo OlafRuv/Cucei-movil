@@ -14,7 +14,13 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
+// Ya no existe Http de @angular/http
+import { HttpClientModule } from '@angular/common/http'
+
+// TODO: Revisar esto de HTTP
 // Inyectamos los modulos necesarios
+// HttpClientModule - Probando
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -23,7 +29,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     IonicModule.forRoot(), 
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    HttpClientModule
   ],
   providers: [
     StatusBar,
