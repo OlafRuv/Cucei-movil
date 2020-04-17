@@ -6,5 +6,7 @@
 
 <ion-content>
   <div class="camera"></div>
-  <input type="file" (change)="fileChanged($event)">
+  <input type="file" accept=".png, .jpg" (change)="fileChanged($event)">
 </ion-content>
+
+<input #imageUser type="hidden" [value]="urlImage | async">

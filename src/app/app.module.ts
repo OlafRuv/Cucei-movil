@@ -14,8 +14,13 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
+import { AngularFireStorageModule } from '@angular/fire/storage'
+import { UserService } from './user.service';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+
+
 // Ya no existe Http de @angular/http
-import { HttpClientModule } from '@angular/common/http'
+// import { HttpClientModule } from '@angular/common/http'
 
 // TODO: Revisar esto de HTTP
 // Inyectamos los modulos necesarios
@@ -30,12 +35,14 @@ import { HttpClientModule } from '@angular/common/http'
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    HttpClientModule
+    AngularFireStorageModule,
+    AngularFirestoreModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    UserService
   ],
   bootstrap: [AppComponent]
 })
