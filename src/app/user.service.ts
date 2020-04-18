@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core'
 
 interface user{
-    username: string
-    uid: string
+    uid?: string
+    username?: string
+    nombre?: string
+    apellido?: string,
+    telefono?: string,
+    placas?: string,
+    password?: string,
+    url?: string
 }
 
 @Injectable()
 export class UserService{
     private user: user
+
 
     constructor(){
 

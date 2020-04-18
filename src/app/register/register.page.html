@@ -41,11 +41,26 @@
           <ion-input type="password" [(ngModel)]="cpassword"></ion-input>
         </ion-item>
 
+        <br>
+          <input position="floating" type="file" accept=".png, .jpg" (change)="onUpload($event)">
+        <br>
+        <br>
+
+
+        <input #imageUser type="hidden" [value]="urlImage | async">
+
       </ion-list>
-      <ion-button expand="block" color="primary" (click)="register()">Save</ion-button>
+
+      <ion-button *ngIf="urlImage | async; else btnDisabled"
+      expand="block" color="primary" (click)="onAddUser()">Save</ion-button>
+      <ng-template #btnDisabled>
+        <ion-button expand="block" color="secondary" disabled=true (click)="register()">Save</ion-button>
+      </ng-template>
+
       <ion-button expand="block" 
         fill="clear" routerLink="/home" routerDirection="backwad">Back
       </ion-button>
+
     </ion-card-content>
   </ion-card>
 </ion-content>

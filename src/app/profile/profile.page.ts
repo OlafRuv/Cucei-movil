@@ -4,6 +4,9 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators'
 import { Observable } from 'rxjs/internal/Observable';
 
+import { AngularFireAuth } from '@angular/fire/auth';
+import { UserService } from '../user.service'
+
 // Ya no existe Http de @angular/http
 // import { HttpClient } from '@angular/common/http'
 
@@ -18,12 +21,20 @@ import { Observable } from 'rxjs/internal/Observable';
 export class ProfilePage implements OnInit {
 
   // Se inyecto en el constructor, public http: HttpClient
-  constructor(private storage: AngularFireStorage) { }
+  constructor
+  (
+    private storage: AngularFireStorage,
+    private afAuth: AngularFireAuth,
+    public user: UserService
+  ) { }
+  
+  
 
   uploadPercent: Observable<number>
   urlImage: Observable<string>
 
   ngOnInit() {
+    this.user.setUser
   }
 
 
@@ -31,16 +42,20 @@ export class ProfilePage implements OnInit {
   // https://upload.uploadcare.com/base/
 
   fileChanged(event){
+
+    /*
     //console.log("Subir", event.target.files[0])
     const id = Math.random().toString(36).substring(2);
     const file = event.target.files[0];
+    console.log("Este es el contenido", file)
+    console.log("Tipo de dato: ", typeof(file))
     const filePath = 'uploads/profile_' + id;
     const ref = this.storage.ref(filePath)
     const task = this.storage.upload(filePath, file)
 
     this.uploadPercent = task.percentageChanges()
     task.snapshotChanges().pipe( finalize(() => this.urlImage = ref.getDownloadURL())).subscribe()
-
+    */
 
     /*
     const files = event.target.files

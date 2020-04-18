@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 
 // Importamos la autentificación de Firebase
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -9,6 +9,14 @@ import { AlertController } from '@ionic/angular'
 
 import { AngularFirestore } from '@angular/fire/firestore'
 import { UserService } from '../user.service';
+
+// Para subir las fotos
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators'
+import { Observable } from 'rxjs/internal/Observable';
+
+import { AuthService } from '../auth.service'
+
 
 @Component({
   selector: 'app-register',
@@ -26,55 +34,25 @@ export class RegisterPage implements OnInit {
   cpassword: string = "";
 
   constructor(
-    public afAuth: AngularFireAuth,
-    public alertController: AlertController,
     public router: Router,
+    public afAuth: AngularFireAuth,
+    private authService: AuthService,
+
+    public alertController: AlertController,
     public afStore: AngularFirestore,
-    public user: UserService
+    public user: UserService,
+    private storage: AngularFireStorage
   ) { }
 
+  // ViewChild ejemplo actualizado
+  // https://www.youtube.com/watch?v=AyuIaJTqBLs
+  @ViewChild('imageUser', { static:true }) inputImageUser: ElementRef
+
+  uploadPercent: Observable<number>
+  
+  urlImage: Observable<string>
+
   ngOnInit() {
-  }
-
-  async presentAlert(title: string, content: string){
-    const alert = await this.alertController.create({
-      header: title,
-      message: content,
-      buttons: ['OK']
-    })
-  }
-
-  async register(){
-    const { username, nombre, apellido, telefono, placas, password, cpassword } = this
-    if(password !== cpassword){
-      this.showAlert("Error!", "Passwords don't match")
-      return console.error("Passwords don't match")
-    }
-
-    try{
-      const res = await this.afAuth.createUserWithEmailAndPassword(username + '@codedamn.com', password)
-      
-      this.afStore.doc('users/' + res.user.uid).set({
-        username,
-        nombre,
-        apellido,
-        telefono,
-        placas,
-        password
-      })
-
-      this.user.setUser({
-        username,
-        uid: res.user.uid
-      })
-
-      this.presentAlert("Success", "You are registered!")
-      this.router.navigate(['/tabs'])
-
-    }catch(error){
-      console.dir(error)
-      this.showAlert("Error", error.message)
-    }
   }
 
   async showAlert(header: string, message: string){
@@ -84,5 +62,62 @@ export class RegisterPage implements OnInit {
       buttons: ["Ok"]
     })
     await alert.present()
+  }
+
+  onUpload(event){
+    // Subir la foto
+    const id = Math.random().toString(36).substring(2);
+    const file = event.target.files[0];
+    const filePath = 'uploads/profile_' + id;
+    const ref = this.storage.ref(filePath)
+    const task = this.storage.upload(filePath, file)
+
+    this.uploadPercent = task.percentageChanges()
+    task.snapshotChanges().pipe( finalize(() => this.urlImage = ref.getDownloadURL())).subscribe()
+  }
+
+  onLoginRedirect(){
+    this.router.navigate(['/tabs/map'])
+  }
+
+  onAddUser(){
+    const {username, nombre, apellido, telefono, placas, password, cpassword} = this
+    if(password !== cpassword){
+      this.showAlert("Error!", "Passwords don't match")
+      return console.error("Passwords don't match")
+    }
+
+    try{
+      const url = this.inputImageUser.nativeElement.value
+      this.authService.registerUser(username + '@codedamn.com', password)
+      .then((res)=>{
+        this.authService.isAuth().subscribe(user => {
+          if(user){
+            this.showAlert("Success", "You are registered!")
+            this.afStore.doc('users/' + user.uid).set({
+              username,
+              nombre,
+              apellido,
+              telefono,
+              placas,
+              password,
+              url
+            })
+            user.updateProfile({
+              displayName: '',
+              photoURL: url
+            }).then( function () {
+              console.log('User Updated')
+            }).catch( function (error) {
+              console.log('error', error)
+            })
+          }
+        })
+        this.onLoginRedirect()
+      }).catch( err => console.log('error', err.message))
+    }catch(error){
+      console.dir(error)
+      this.showAlert("Error", error.message)
+    }
   }
 }
