@@ -20,6 +20,14 @@ export class MapPage implements OnInit, AfterContentInit {
   ngOnInit() {
   }
 
+  doRefresh(event){
+    setTimeout(() => {
+      console.log("Recargado :3")
+      location.reload();
+      event.target.complete()
+    }, 1000)
+  }
+
   funcionMapa(){
     console.log("Aqui es donde va funcion para latitud y longitud ponerlas en el mapa")
   }

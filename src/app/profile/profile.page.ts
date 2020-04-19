@@ -56,7 +56,10 @@ export class ProfilePage implements OnInit {
     */
     this.authService.isAuth().subscribe(user => {
       if(user){
-        const idBook = user.uid
+        console.log("Usuario en perfil: ", user)
+        console.log("user.uid: ", user.uid)
+        var idBook = user.uid
+        console.log("idBook: ", idBook)
         this.usersDataApi.getOneUser(idBook).subscribe(apiUser=>{
           console.log('Api User', apiUser)
           this.user = apiUser

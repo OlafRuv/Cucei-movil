@@ -1,18 +1,22 @@
-<ion-content class="ion-padding" >
-  <!-- Back button with a default href -->
+
+
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="home"></ion-back-button>
-    </ion-buttons>
+    <ion-title>PARKING MAP</ion-title>
   </ion-toolbar>
 </ion-header>
 
-
-  <h1>
-    PARKING MAP
-  </h1>
+<ion-content class="ion-padding" >
+  <!-- Back button with a default href -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
+  
+  <br>
   <div #map id="map"></div> 
+  <br>
+
   <ion-card>
     <ion-card-content>
       
@@ -22,5 +26,4 @@
     </ion-card-content>
   </ion-card>
 
-  
 </ion-content>

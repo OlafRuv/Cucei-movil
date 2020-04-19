@@ -48,6 +48,11 @@ export class TabsPage implements OnInit {
         console.log('Not user logged')
       }
     })
+    this.authService.isAuth().subscribe( user => {
+      if(user){
+        console.log("Usuario sesion en Tabs: ", user)
+      }
+    })
 //    console.log("Logeado: ", this.isLogged)
   }
 

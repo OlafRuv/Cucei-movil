@@ -12,6 +12,7 @@ import { AlertController } from '@ionic/angular'
 
 // Verificación de usuarios
 import { AuthService } from '../service/auth.service'
+import { UsersDataApiService } from '../service/data-api-users'
 
 @Component({
   selector: 'app-home',
@@ -24,15 +25,20 @@ export class HomePage {
   password: string = "";
   constructor
   (
-    public navCtrl: NavController, 
-    public afAuth: AngularFireAuth,
-    public user: UserService,
-    public router: Router,
-    public authService: AuthService,
-    public alertController: AlertController
+    private navCtrl: NavController, 
+    private afAuth: AngularFireAuth,
+    private user: UserService,
+    private router: Router,
+    private authService: AuthService,
+    private alertController: AlertController,
+    private usersDataApi: UsersDataApiService
   ) { }
 
   ngOnInit(){
+//    this.afAuth.signOut()
+    this.usersDataApi.getAllUsers().subscribe(users =>{
+      console.log('Todos los usuarios (Home): ', users)
+    })
   }
 
   async showAlert(header: string, message: string){
@@ -44,11 +50,17 @@ export class HomePage {
     await alert.present()
   }
 
-  async login(){
+  login(){
     const { username, password } = this
+    console.log("Usuario (login): ", username)
+    console.log("Password (login): ", password)
     this.authService.loginEmailUser(username + '@codedamn.com', password)
     .then((res)=>{
-//      this.showAlert("Welcome", "You're logging!")
+      this.authService.isAuth().subscribe(user=>{
+        if(user){
+          console.log("Usuario iniciado sesion: ", user)
+        }
+      })
       this.onLoginRedirect()
     }).catch( err => this.showAlert('Error: ', err.message))
   }

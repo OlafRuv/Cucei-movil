@@ -16,7 +16,7 @@ import { finalize } from 'rxjs/operators'
 import { Observable } from 'rxjs/internal/Observable';
 
 import { AuthService } from '../service/auth.service'
-
+import { UsersDataApiService } from '../service/data-api-users'
 
 @Component({
   selector: 'app-register',
@@ -34,14 +34,15 @@ export class RegisterPage implements OnInit {
   cpassword: string = "";
 
   constructor(
-    public router: Router,
-    public afAuth: AngularFireAuth,
+    private router: Router,
+    private afAuth: AngularFireAuth,
     private authService: AuthService,
 
-    public alertController: AlertController,
-    public afStore: AngularFirestore,
-    public user: UserService,
-    private storage: AngularFireStorage
+    private alertController: AlertController,
+    private afStore: AngularFirestore,
+    private user: UserService,
+    private storage: AngularFireStorage,
+    private usersDataApi: UsersDataApiService
   ) { }
 
   // ViewChild ejemplo actualizado
@@ -53,6 +54,9 @@ export class RegisterPage implements OnInit {
   urlImage: Observable<string>
 
   ngOnInit() {
+    this.usersDataApi.getAllUsers().subscribe(users =>{
+      console.log('Todos los usuarios (Register): ', users)
+    })
   }
 
   async showAlert(header: string, message: string){
@@ -66,11 +70,11 @@ export class RegisterPage implements OnInit {
 
   onUpload(event){
     // Subir la foto
-    const id = Math.random().toString(36).substring(2);
-    const file = event.target.files[0];
-    const filePath = 'uploads/profile_' + id;
-    const ref = this.storage.ref(filePath)
-    const task = this.storage.upload(filePath, file)
+    var id = Math.random().toString(36).substring(2);
+    var file = event.target.files[0];
+    var filePath = 'uploads/profile_' + id;
+    var ref = this.storage.ref(filePath)
+    var task = this.storage.upload(filePath, file)
 
     this.uploadPercent = task.percentageChanges()
     task.snapshotChanges().pipe( finalize(() => this.urlImage = ref.getDownloadURL())).subscribe()
@@ -81,43 +85,54 @@ export class RegisterPage implements OnInit {
   }
 
   onAddUser(){
-    const {username, nombre, apellido, telefono, placas, password, cpassword} = this
+    var {username, nombre, apellido, telefono, placas, password, cpassword} = this
     if(password !== cpassword){
       this.showAlert("Error!", "Passwords don't match")
       return console.error("Passwords don't match")
     }
 
-    try{
-      const url = this.inputImageUser.nativeElement.value
-      this.authService.registerUser(username + '@codedamn.com', password)
-      .then((res)=>{
-        this.authService.isAuth().subscribe(user => {
-          if(user){
-//            this.showAlert("Success", "You are registered!")
-            this.afStore.doc('users/' + user.uid).set({
-              username,
-              nombre,
-              apellido,
-              telefono,
-              placas,
-              password
-            })
-            user.updateProfile({
-              displayName: '',
-              photoURL: url
-            }).then( function () {
-              console.log('User Updated')
-              console.log(user)
-            }).catch( function (error) {
-              console.log('error', error)
-            })
-          }
-        })
-        this.onLoginRedirect()
-      }).catch( err => console.log('error', err.message))
-    }catch(error){
-      console.dir(error)
-      this.showAlert("Error", error.message)
+    else{
+      console.log("username (register): ", username)
+      console.log("password (register): ", password)
+      try{
+        var url = this.inputImageUser.nativeElement.value
+        console.log("url declarado: ", url)
+        this.authService.registerUser(username + '@codedamn.com', password)
+        .then((res)=>{
+          this.authService.isAuth().subscribe(user => {
+            if(user){
+              console.log("Usuario en register: ", user)
+              console.log("User.uid: ", user.uid)
+  //            this.showAlert("Success", "You are registered!")
+              this.afStore.doc('users/' + user.uid).set({
+                username,
+                nombre,
+                apellido,
+                telefono,
+                placas,
+                password
+              })
+              this.usersDataApi.getOneUser(user.uid).subscribe(apiUser =>{
+                console.log("Api User cuando esta en la base de datos (register): ", apiUser)
+              })
+              user.updateProfile({
+                displayName: '',
+                photoURL: url
+              }).then( function () {
+                console.log('User Updated')
+                console.log(user)
+              }).catch( function (error) {
+                console.log('error', error)
+              })
+            }
+          })
+          this.onLoginRedirect()
+        }).catch( err => this.showAlert("Error!", err.message))
+      }catch(error){
+        console.dir(error)
+        this.showAlert("Error", error.message)
+      }
+//      this.onLoginRedirect()
     }
   }
 }
