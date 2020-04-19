@@ -11,7 +11,7 @@ import { Router } from '@angular/router'
 import { AlertController } from '@ionic/angular'
 
 // Verificación de usuarios
-import { AuthService } from '../auth.service'
+import { AuthService } from '../service/auth.service'
 
 @Component({
   selector: 'app-home',
@@ -48,7 +48,7 @@ export class HomePage {
     const { username, password } = this
     this.authService.loginEmailUser(username + '@codedamn.com', password)
     .then((res)=>{
-      this.showAlert("Welcome", "You're logging!")
+//      this.showAlert("Welcome", "You're logging!")
       this.onLoginRedirect()
     }).catch( err => this.showAlert('Error: ', err.message))
   }

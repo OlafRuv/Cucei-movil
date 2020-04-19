@@ -15,7 +15,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators'
 import { Observable } from 'rxjs/internal/Observable';
 
-import { AuthService } from '../auth.service'
+import { AuthService } from '../service/auth.service'
 
 
 @Component({
@@ -93,21 +93,21 @@ export class RegisterPage implements OnInit {
       .then((res)=>{
         this.authService.isAuth().subscribe(user => {
           if(user){
-            this.showAlert("Success", "You are registered!")
+//            this.showAlert("Success", "You are registered!")
             this.afStore.doc('users/' + user.uid).set({
               username,
               nombre,
               apellido,
               telefono,
               placas,
-              password,
-              url
+              password
             })
             user.updateProfile({
               displayName: '',
               photoURL: url
             }).then( function () {
               console.log('User Updated')
+              console.log(user)
             }).catch( function (error) {
               console.log('error', error)
             })

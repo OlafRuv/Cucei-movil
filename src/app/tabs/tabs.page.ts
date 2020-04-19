@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonTabs } from '@ionic/angular';
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthService } from '../auth.service'
+import { AuthService } from '../service/auth.service'
 import { Router } from '@angular/router'
 
 @Component({

@@ -18,6 +18,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage'
 import { UserService } from './user.service';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
+import { AngularFirestore } from '@angular/fire/firestore'
 
 // Ya no existe Http de @angular/http
 // import { HttpClientModule } from '@angular/common/http'
@@ -42,7 +43,8 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    UserService
+    UserService,
+    AngularFirestore
   ],
   bootstrap: [AppComponent]
 })

@@ -1,12 +1,73 @@
+
+<!--
+<section id="profile" class="container">
+  <div class="row mt-5">
+    <div class="offset-lg-4 col-lg-4 col-sm-6 col-12 main-section text-center card">
+      <div class="row">
+        <div class="col-lg-12 col-sm-12 col-12 profile-header"></div>
+      </div>
+      <div class="row user-details">
+        <div class="col-12">
+          
+          <h5 *ngIf="providerId != 'password'">{{user.name}}</h5>
+          <p>
+            {{user.email}}
+          </p>
+
+          <hr>
+          <span>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores suscipit itaque minima quae.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+-->
+
+
+
+
 <ion-header>
   <ion-toolbar>
-    <ion-title>Perfil uwu</ion-title>
+    <ion-title class="title">Perfil uwu</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <div class="camera"></div>
-  <input type="file" accept=".png, .jpg" (change)="fileChanged($event)">
+  <ion-card>
+    <br>
+    <img src="{{user.photoUrl}}" class="photo">
+    <br>
+    <ion-card-title class="username">{{user.username}}</ion-card-title>
+    <ion-card-content>
+      
+      <ion-list>
+
+        <ion-item-sliding>
+
+          <ion-item>
+            <ion-label>Nombre: {{user.nombre}}</ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Apellido: {{user.apellido}}</ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Telefono: {{user.telefono}}</ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Placas: {{user.placas}}</ion-label>
+          </ion-item>
+
+        </ion-item-sliding>
+
+      </ion-list>
+
+    </ion-card-content>
+  </ion-card>
+  <br>
+  <ion-button expand="block" color="primary" (click)="modificar()">Editar Usuario</ion-button>
+  <br>
+  <ion-button expand="block" color="warning" (click)="eliminar()">Eliminar Usuario</ion-button>
 </ion-content>
 
-<input #imageUser type="hidden" [value]="urlImage | async">

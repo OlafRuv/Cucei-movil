@@ -5,11 +5,16 @@ import { finalize } from 'rxjs/operators'
 import { Observable } from 'rxjs/internal/Observable';
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from '../user.service'
+
+//import { UserService } from '../user.service'
+
+import { AuthService } from '../service/auth.service'
+import { UserInterface } from '../models/user'
 
 // Ya no existe Http de @angular/http
 // import { HttpClient } from '@angular/common/http'
 
+import { UsersDataApiService } from '../service/data-api-users'
 
 // TODO: Revisar esto - Buscar una nueva forma de poner las imagenes
 
@@ -21,55 +26,59 @@ import { UserService } from '../user.service'
 export class ProfilePage implements OnInit {
 
   // Se inyecto en el constructor, public http: HttpClient
+  
+  nombre: string = ''
+  apellido: string = ''
+
+
   constructor
   (
     private storage: AngularFireStorage,
     private afAuth: AngularFireAuth,
-    public user: UserService
+    private authService: AuthService,
+    private usersDataApi: UsersDataApiService
   ) { }
+
+  public apiUsers = []
+  public apiUser = ''
+
+  user: UserInterface = {};
+  
+  public providerId: string = 'null'
   
   
-
-  uploadPercent: Observable<number>
-  urlImage: Observable<string>
-
   ngOnInit() {
-    this.user.setUser
-  }
-
-
-  // ada5e3cb2da06dee6d82
-  // https://upload.uploadcare.com/base/
-
-  fileChanged(event){
-
+    
     /*
-    //console.log("Subir", event.target.files[0])
-    const id = Math.random().toString(36).substring(2);
-    const file = event.target.files[0];
-    console.log("Este es el contenido", file)
-    console.log("Tipo de dato: ", typeof(file))
-    const filePath = 'uploads/profile_' + id;
-    const ref = this.storage.ref(filePath)
-    const task = this.storage.upload(filePath, file)
-
-    this.uploadPercent = task.percentageChanges()
-    task.snapshotChanges().pipe( finalize(() => this.urlImage = ref.getDownloadURL())).subscribe()
-    */
-
-    /*
-    const files = event.target.files
-    //console.log(files)
-
-    const data = new FormData()
-    data.append('file', files[0])
-    data.append('UPLOADCARE_STORE', '1')
-    data.append('UPLOADCARE_PUB_KEY', 'ada5e3cb2da06dee6d82')
-
-    this.http.post('https://upload.uploadcare.com/base/', data)
-    .subscribe(event =>{
-      console.log(event)
+    this.usersDataApi.getAllUsers().subscribe(users =>{
+      console.log('Users', users)
+      this.apiUsers = users
     })
     */
+    this.authService.isAuth().subscribe(user => {
+      if(user){
+        const idBook = user.uid
+        this.usersDataApi.getOneUser(idBook).subscribe(apiUser=>{
+          this.user = apiUser
+          this.user.photoUrl = user.photoURL
+          console.log('URL', user.photoURL)
+          /*
+          this.user.username = apiUser.username
+          this.user.nombre = apiUser.nombre
+          this.user.apellido = apiUser.apellido
+          this.user.telefono = apiUser.telefono
+          this.user.placas = apiUser.placas
+          */
+        })
+      }
+    })
+  }
+
+  modificar(){
+    console.log("Boton Editar Funcionando")
+  }
+
+  eliminar(){
+    console.log("Boton Eliminar Funcionando")
   }
 }
