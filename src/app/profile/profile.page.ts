@@ -40,7 +40,6 @@ export class ProfilePage implements OnInit {
   ) { }
 
   public apiUsers = []
-  public apiUser = ''
 
   user: UserInterface = {};
   
@@ -59,6 +58,7 @@ export class ProfilePage implements OnInit {
       if(user){
         const idBook = user.uid
         this.usersDataApi.getOneUser(idBook).subscribe(apiUser=>{
+          console.log('Api User', apiUser)
           this.user = apiUser
           this.user.photoUrl = user.photoURL
           console.log('URL', user.photoURL)
