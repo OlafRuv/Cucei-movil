@@ -20,6 +20,8 @@ import { UsersDataApiService } from '../service/data-api-users'
 
 import { Router } from '@angular/router'
 
+import * as firebase from 'firebase'
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -57,10 +59,12 @@ export class ProfilePage implements OnInit {
       this.apiUsers = users
     })
     */
+
     this.authService.isAuth().subscribe(user => {
       if(user){
 //        console.log("Usuario en perfil: ", user)
 //        console.log("user.uid: ", user.uid)
+          //        user.reauthenticateWithCredential() 
         var idUser = user.uid
 //        console.log("idUser: ", idUser)
         this.usersDataApi.getOneUser(idUser).subscribe(apiUser=>{
@@ -85,19 +89,43 @@ export class ProfilePage implements OnInit {
     console.log("Boton Editar Funcionando")
   }
 
-  eliminar(idUser: string){
+  eliminar(){
     console.log("Boton Eliminar Funcionando")
-    console.log("Delete User: ", idUser)
+    console.log("Delete User id: ", this.user.id)
+    console.log("Delete User username: ", this.user.username)
+    console.log("Delete User password: ", this.user.password)
+    
+    var login = {
+      email: this.user.username + "@codedamn.com",
+      password: this.user.password
+    }
+
+    console.log("Login: ", login)
+    
     const confirmacion = confirm("Are you sure pana?")
     if(confirmacion){
-//      console.log("Lo has borrado D:")
-      this.afAuth.currentUser
-      this.usersDataApi.deleteUser(idUser)
-      this.authService.isAuth().subscribe(user => {
-        user.delete()
+
+      var userCreden = firebase.auth().currentUser
+      
+      var credentials = firebase.auth.EmailAuthProvider.credential(
+        login.email,
+        login.password
+      )
+      
+      userCreden.reauthenticateWithCredential(credentials).then(function(){
+        console.log("El usuario se ha autentificado")
+        userCreden.delete().then(function(){
+          console.log("El usuario se ha eliminado")
+        }).catch(function(error){
+          console.log("Error Delete:",error)
+        })
+      }).catch(function(error){
+        console.log("Error:",error)
       })
+
+      this.usersDataApi.deleteUser(this.user.id)
+
       this.router.navigate(['../../home'])
     }
-//    this.usersDataApi.deleteUser(idUser)
   }
 }

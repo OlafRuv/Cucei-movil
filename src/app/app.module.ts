@@ -20,6 +20,9 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { AngularFirestore } from '@angular/fire/firestore'
 
+// Ver esta parte de firebase, lo utilizo para eliminar
+import * as firebase from 'firebase'
+
 // Ya no existe Http de @angular/http
 // import { HttpClientModule } from '@angular/common/http'
 

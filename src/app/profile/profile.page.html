@@ -42,10 +42,6 @@
       <ion-list>
 
         <ion-item-sliding>
-
-          <ion-item [hidden]="true">
-            <ion-label>ID: {{user.id}}</ion-label>
-          </ion-item>
           
           <ion-item>
             <ion-label>Nombre: {{user.nombre}}</ion-label>
@@ -72,6 +68,6 @@
   <br>
   <ion-button expand="block" color="primary" (click)="modificar()">Editar Usuario</ion-button>
   <br>
-  <ion-button expand="block" color="warning" (click)="eliminar($event ,user.id)">Eliminar Usuario</ion-button>
+  <ion-button expand="block" color="warning" (click)="eliminar()">Eliminar Usuario</ion-button>
 </ion-content>
 
