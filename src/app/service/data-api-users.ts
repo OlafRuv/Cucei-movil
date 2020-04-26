@@ -5,12 +5,18 @@ import { Observable } from 'rxjs/internal/Observable'
 import { UserService } from '../user.service'
 import { map } from 'rxjs/operators'
 
+import { AuthService } from '../service/auth.service'
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class UsersDataApiService{
-    constructor(private afs: AngularFirestore){
+    constructor
+    (
+        private afs: AngularFirestore, 
+        private authService: AuthService
+        ){
         this.usersCollection = afs.collection<UserInterface>('users')
         this.users = this.usersCollection.valueChanges()
     }
@@ -45,7 +51,18 @@ export class UsersDataApiService{
         }))
     }
     
-    addUser(){}
-    updateUser(){}
-    deleteUser(){}
+    addUser(user: UserInterface){
+        this.usersCollection.add(user)
+    }
+
+    updateUser(user: UserInterface){
+        let idUser = user.id
+        this.userDoc = this.afs.doc<UserInterface>('users/' + idUser)
+        this.userDoc.update(user)
+    }
+
+    deleteUser(idUser: string){
+        this.userDoc = this.afs.doc<UserInterface>('users/' + idUser)
+        this.userDoc.delete()
+    }
 }

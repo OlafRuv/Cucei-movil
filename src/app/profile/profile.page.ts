@@ -18,6 +18,8 @@ import { UsersDataApiService } from '../service/data-api-users'
 
 // TODO: Revisar esto - Buscar una nueva forma de poner las imagenes
 
+import { Router } from '@angular/router'
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -36,7 +38,8 @@ export class ProfilePage implements OnInit {
     private storage: AngularFireStorage,
     private afAuth: AngularFireAuth,
     private authService: AuthService,
-    private usersDataApi: UsersDataApiService
+    private usersDataApi: UsersDataApiService,
+    public router: Router
   ) { }
 
   public apiUsers = []
@@ -56,15 +59,16 @@ export class ProfilePage implements OnInit {
     */
     this.authService.isAuth().subscribe(user => {
       if(user){
-        console.log("Usuario en perfil: ", user)
-        console.log("user.uid: ", user.uid)
-        var idBook = user.uid
-        console.log("idBook: ", idBook)
-        this.usersDataApi.getOneUser(idBook).subscribe(apiUser=>{
-          console.log('Api User', apiUser)
+//        console.log("Usuario en perfil: ", user)
+//        console.log("user.uid: ", user.uid)
+        var idUser = user.uid
+//        console.log("idUser: ", idUser)
+        this.usersDataApi.getOneUser(idUser).subscribe(apiUser=>{
+//          console.log('Api User', apiUser)
           this.user = apiUser
+          console.log("Usuario: ", this.user)
           this.user.photoUrl = user.photoURL
-          console.log('URL', user.photoURL)
+//          console.log('URL', user.photoURL)
           /*
           this.user.username = apiUser.username
           this.user.nombre = apiUser.nombre
@@ -81,7 +85,19 @@ export class ProfilePage implements OnInit {
     console.log("Boton Editar Funcionando")
   }
 
-  eliminar(){
+  eliminar(idUser: string){
     console.log("Boton Eliminar Funcionando")
+    console.log("Delete User: ", idUser)
+    const confirmacion = confirm("Are you sure pana?")
+    if(confirmacion){
+//      console.log("Lo has borrado D:")
+      this.afAuth.currentUser
+      this.usersDataApi.deleteUser(idUser)
+      this.authService.isAuth().subscribe(user => {
+        user.delete()
+      })
+      this.router.navigate(['../../home'])
+    }
+//    this.usersDataApi.deleteUser(idUser)
   }
 }
