@@ -64,7 +64,6 @@ export class ProfilePage implements OnInit {
       if(user){
 //        console.log("Usuario en perfil: ", user)
 //        console.log("user.uid: ", user.uid)
-          //        user.reauthenticateWithCredential() 
         var idUser = user.uid
 //        console.log("idUser: ", idUser)
         this.usersDataApi.getOneUser(idUser).subscribe(apiUser=>{
@@ -87,6 +86,7 @@ export class ProfilePage implements OnInit {
 
   modificar(){
     console.log("Boton Editar Funcionando")
+    this.router.navigate(['../../profile-edit'])
   }
 
   eliminar(){
