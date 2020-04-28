@@ -27,7 +27,7 @@ interface Marker{
 })
 
 export class MapPage implements OnInit, AfterContentInit {
-  map:any;
+  //map:any;
   @ViewChild('map',{ static: true })mapElement: ElementRef;
 
   lat:number;
@@ -50,21 +50,22 @@ export class MapPage implements OnInit, AfterContentInit {
         var idUser = user.uid
         this.usersDataApi.getOneUser(idUser).subscribe(apiUser=>{
           this.user = apiUser
-          console.log("Usuario en Map:", this.user)
+//          console.log("Usuario en Map:", this.user)
+//          console.log("Antes del Marker Username:",this.user.username)
         })
-        /*
-        this.markersDataApi.getOneMarker(idUser).subscribe(apiMarker => {
-          this.marker = apiMarker
-          console.log("Marker en Map:", this.marker)
-        })
-        */
       }
     })
     this.markersDataApi.getAllMarkers().subscribe(apiMarkers => {
-      console.log("Todos los Markers:",apiMarkers)
+      //console.log("Todos los Markers:",apiMarkers)
       this.markers = apiMarkers
-      console.log("Todos los markers (arreglo)",this.markers)
+      //console.log("Todos los markers (arreglo)",this.markers)
     })
+    //const idMarker = "Z8MucuvWOnZfQrqelOlQ"
+    //this.markersDataApi.getOneMarker(idMarker).subscribe(apiMarker => {
+    //  console.log("Un Marker por ID:", apiMarker)
+    //})
+    
+
   }
 
   ubicacion(){
@@ -74,14 +75,28 @@ export class MapPage implements OnInit, AfterContentInit {
         this.lat = position.coords.latitude
         this.lng = position.coords.longitude
         console.log("Latitud:",this.lat)
-        this.agregarMarcador(this.lat, this.lng)
+        console.log("Longitud:", this.lng)
       });
     }else{
       console.log("Tu navegador NO soporta geolocalizacion")
     }
   }
 
-  agregarMarcador(lat, lng){
+  addMarker(){
+    if(navigator.geolocation){
+//      console.log("Tu navegador soporta geolocalizacion")
+      navigator.geolocation.getCurrentPosition(position => {
+        this.lat = position.coords.latitude
+        this.lng = position.coords.longitude
+        this.saveMarker(this.lat, this.lng)
+        console.log("Marker has saved")
+      });
+    }else{
+      console.log("Tu navegador NO soporta geolocalizacion")
+    }
+  }
+
+  saveMarker(lat, lng){
     console.log("User:",this.user)
 //    this.marker.id = this.user.id
     this.marker.username = this.user.username
@@ -109,13 +124,51 @@ export class MapPage implements OnInit, AfterContentInit {
     this.loadMap()
   }
 
+
   loadMap(){
+    var map:any;
+    var myLatLng = {lat:20.592935, lng:-103.23173369999999}
+    map = new google.maps.Map(this.mapElement.nativeElement,{
+      zoom: 14,
+      center: myLatLng,
+    });
+    this.markersDataApi.getAllMarkers().subscribe(apiMarkers => {
+      //console.log("Todos los Markers:",apiMarkers)
+      this.markers = apiMarkers
+      console.log("Todos los markers (arreglo)",this.markers)
+      this.markers.forEach(element => {
+        console.log("Latitud:",element.lat)
+        console.log("Longitud:",element.lng)
+        var marcador = new google.maps.Marker({
+          position: new google.maps.LatLng(element.lat, element.lng),
+          map: map
+        })
+      });
+    })
+    /*
     //var myLatLng = {lat:20.6736, lng:-103.344}
     var myLatLng = {lat:20.592935, lng:-103.23173369999999}
     this.map = new google.maps.Map(this.mapElement.nativeElement,{
       zoom: 14,
       center: myLatLng,
     });
+
+    this.markersDataApi.getAllMarkers().subscribe(apiMarkers => {
+      //console.log("Todos los Markers:",apiMarkers)
+      this.markers = apiMarkers
+      console.log("Todos los markers (arreglo)",this.markers)
+      this.markers.forEach(element => {
+        console.log("Latitud:",element.lat)
+        console.log("Longitud:",element.lng)
+        var marcador = new google.maps.Marker({
+          position: new google.maps.LatLng(element.lat, element.lng),
+          map: this.map
+        })
+      });
+    })
+    */
+    
+
 
     
     

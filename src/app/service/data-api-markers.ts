@@ -46,6 +46,8 @@ export class MarkersDataApiService{
             }
         }))
     }
+
+    
     
     addMarker(marker: MarkerInterface){
         this.markersCollection.add(marker)
@@ -61,4 +63,42 @@ export class MarkersDataApiService{
         this.markerDoc = this.afs.doc<MarkerInterface>('markers/' + idmarker)
         this.markerDoc.delete()
     }
+    /*
+    Funciona, pero no retorna nada :/
+    getOneMarkerByUsername(usernameMarker: string):any{
+        console.log("Usuario en username:", usernameMarker)
+        var markers = []
+        var marker: MarkerInterface = {};
+        
+        this.getAllMarkers().subscribe(apiMarkers => {
+            markers = apiMarkers
+            console.log("Todos los markers (arreglo by username)",markers)
+            markers.forEach(element => {
+                marker = element
+                if(marker.username === usernameMarker){
+                    console.log("Coincidencia:", marker)
+                    console.log("ID de Marker:", marker.id)
+                    
+                    //this.getOneMarker(marker.id)
+
+                    // Con lo de abajo
+                    //this.markerDoc = this.afs.doc<MarkerInterface>('markers/'+marker.id)
+                    //return this.marker = this.markerDoc.snapshotChanges()
+                    //.pipe(map(action => {
+                    //    if(action.payload.exists === false){
+                    //        console.log("No retorna")
+                    //        return null
+                    //    }else{
+                    //        const data = action.payload.data() as MarkerInterface
+                    //        data.id = action.payload.id
+                    //        console.log("Retorna Data:", data)
+                    //        return data
+                    //    }
+                    //}))
+                    
+                }
+            });
+        })
+    }
+    */
 }
