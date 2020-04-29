@@ -53,6 +53,17 @@ export class MarkersDataApiService{
         this.markersCollection.add(marker)
     }
 
+    addMarkerWithIDUser(marker: MarkerInterface, idUser: string){
+        var lat = marker.lat
+        var lng = marker.lng
+        var username = marker.username
+        this.afs.doc('markers/' + idUser).set({
+            lat,
+            lng,
+            username
+        })
+    }
+
     updateMarker(marker: MarkerInterface){
         let idmarker = marker.id
         this.markerDoc = this.afs.doc<MarkerInterface>('markers/' + idmarker)

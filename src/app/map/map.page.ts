@@ -27,7 +27,7 @@ interface Marker{
 })
 
 export class MapPage implements OnInit, AfterContentInit {
-  //map:any;
+  map:any;
   @ViewChild('map',{ static: true })mapElement: ElementRef;
 
   lat:number;
@@ -56,9 +56,7 @@ export class MapPage implements OnInit, AfterContentInit {
       }
     })
     this.markersDataApi.getAllMarkers().subscribe(apiMarkers => {
-      //console.log("Todos los Markers:",apiMarkers)
       this.markers = apiMarkers
-      //console.log("Todos los markers (arreglo)",this.markers)
     })
     //const idMarker = "Z8MucuvWOnZfQrqelOlQ"
     //this.markersDataApi.getOneMarker(idMarker).subscribe(apiMarker => {
@@ -97,7 +95,8 @@ export class MapPage implements OnInit, AfterContentInit {
   }
 
   saveMarker(lat, lng){
-    console.log("User:",this.user)
+    console.log("User:", this.user)
+    console.log("User ID:", this.user.id)
 //    this.marker.id = this.user.id
     this.marker.username = this.user.username
 
@@ -105,7 +104,14 @@ export class MapPage implements OnInit, AfterContentInit {
     this.marker.lng = lng
 
     console.log("Marker:", this.marker)
-    this.markersDataApi.addMarker(this.marker)
+    this.markersDataApi.addMarkerWithIDUser(this.marker, this.user.id)
+//    this.markersDataApi.addMarker(this.marker)
+  }
+
+  deleteMarker(){
+    console.log("User:", this.user)
+    console.log("User ID:", this.user.id)
+    this.markersDataApi.deleteMarker(this.user.id)
   }
 
   doRefresh(event){
@@ -126,52 +132,26 @@ export class MapPage implements OnInit, AfterContentInit {
 
 
   loadMap(){
-    var map:any;
-    var myLatLng = {lat:20.592935, lng:-103.23173369999999}
-    map = new google.maps.Map(this.mapElement.nativeElement,{
-      zoom: 14,
-      center: myLatLng,
-    });
-    this.markersDataApi.getAllMarkers().subscribe(apiMarkers => {
-      //console.log("Todos los Markers:",apiMarkers)
-      this.markers = apiMarkers
-      console.log("Todos los markers (arreglo)",this.markers)
-      this.markers.forEach(element => {
-        console.log("Latitud:",element.lat)
-        console.log("Longitud:",element.lng)
-        var marcador = new google.maps.Marker({
-          position: new google.maps.LatLng(element.lat, element.lng),
-          map: map
-        })
-      });
-    })
-    /*
-    //var myLatLng = {lat:20.6736, lng:-103.344}
+
     var myLatLng = {lat:20.592935, lng:-103.23173369999999}
     this.map = new google.maps.Map(this.mapElement.nativeElement,{
       zoom: 14,
       center: myLatLng,
     });
 
+    console.log(this.markers)
+    
     this.markersDataApi.getAllMarkers().subscribe(apiMarkers => {
-      //console.log("Todos los Markers:",apiMarkers)
+      
+      
+
       this.markers = apiMarkers
+      
       console.log("Todos los markers (arreglo)",this.markers)
       this.markers.forEach(element => {
-        console.log("Latitud:",element.lat)
-        console.log("Longitud:",element.lng)
-        var marcador = new google.maps.Marker({
-          position: new google.maps.LatLng(element.lat, element.lng),
-          map: this.map
-        })
+        this.markerGoogle(element)        
       });
     })
-    */
-    
-
-
-    
-    
     /*
     google.maps.event.addListenerOne(this.map, 'idle', () => {
       this.mapElement.nativeElement.classList.add('show-map')
@@ -185,6 +165,19 @@ export class MapPage implements OnInit, AfterContentInit {
       this.addMarker(marker)
     })
     */
+  }
+  markerGoogle(element: MarkerInterface){
+    console.log("Marker en markerGoogle:", element)
+    var marcador = new google.maps.Marker({
+      position: new google.maps.LatLng(element.lat, element.lng),
+      map: this.map
+    })
+    var infoWindow = new google.maps.InfoWindow({
+      content:'<h1>Usuario: '+element.username+'</h1>'
+    })
+    marcador.addListener('click', function(){
+      infoWindow.open(this.map, marcador)
+    })
   }
 
   
